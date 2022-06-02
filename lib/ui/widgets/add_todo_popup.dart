@@ -24,12 +24,6 @@ class _AddTodoPopupWidgetState extends State<AddTodoPopupWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          InkWell(
-              onTap: () {
-                Navigator.pop(
-                    context, TodoModel(title: "My Task", duration: 3));
-              },
-              child: const Text("Add ToDo")),
           TextField(
             cursorColor: Colors.black,
             keyboardType: TextInputType.text,
@@ -63,7 +57,7 @@ class _AddTodoPopupWidgetState extends State<AddTodoPopupWidget> {
                 contentPadding:
                     EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
                 hintText: "Description"),
-            controller: titleTxtCntlr,
+            controller: descriptionTxtCntlr,
           ),
           const SizedBox(
             height: 16,
@@ -80,26 +74,52 @@ class _AddTodoPopupWidgetState extends State<AddTodoPopupWidget> {
                         selectedMinutes, (int value) {
                   setState(() {
                     selectedMinutes = value;
-                    if (selectedMinutes == 10) {
+                    if (selectedMinutes == 10 || selectedMinutes == 0) {
                       selectedSecond = 0;
-
                     }
                   });
                 })),
                 Expanded(
                     child: TimeSelectionDropDown(
-                        "Seconds",
-                        selectedMinutes == 10 ? [0] : GeneralUtil().getNumberArray(60),
-                        selectedMinutes == 10 ? 0 : selectedSecond, (int value) {
+                        "Seconds", getSecondsArray(), selectedSecond,
+                        (int value) {
                   setState(() {
                     selectedSecond = value;
                   });
                 }))
               ],
             ),
-          )
+          ),
+          const SizedBox(
+            height: 50,
+          ),
+          InkWell(
+              onTap: () {
+                if (titleTxtCntlr.text.isEmpty) return;
+                Navigator.pop(
+                  context,
+                  TodoModel(
+                      title: titleTxtCntlr.text,
+                      duration: ((60 *
+                              GeneralUtil()
+                                  .getNumberArray(11)[selectedMinutes]) +
+                          getSecondsArray()[selectedSecond]),
+                      description: descriptionTxtCntlr.text),
+                );
+              },
+              child: const Text("Add ToDo")),
         ],
       ),
     );
+  }
+
+  List<int> getSecondsArray() {
+    if (selectedMinutes == 10) {
+      return [0];
+    }
+    if (selectedMinutes == 0) {
+      return [1];
+    }
+    return GeneralUtil().getNumberArray(60);
   }
 }

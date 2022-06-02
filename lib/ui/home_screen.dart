@@ -35,9 +35,7 @@ class HomeScreen extends StatelessWidget {
         floatingActionButton: Builder(builder: (builderContext) {
           return FloatingActionButton(
             onPressed: () async {
-              // Provider.of<TodoProvider>(context, listen: false).addNewTodoItem(
-              //     TodoModel(title: "My Third Task", duration: 20));
-              TodoModel? model = await showDialog<TodoModel>(
+              TodoModel? newTodoItem = await showDialog<TodoModel>(
                   context: builderContext,
                   useSafeArea: true,
                   builder: (builderContext) {
@@ -49,8 +47,9 @@ class HomeScreen extends StatelessWidget {
                         contentPadding: EdgeInsets.all(0),
                         content: AddTodoPopupWidget());
                   });
-              if (model != null) {
-                debugPrint(model.title);
+              if (newTodoItem != null) {
+                Provider.of<TodoProvider>(context, listen: false)
+                    .addNewTodoItem(newTodoItem);
               }
             },
             child: const Icon(
@@ -68,12 +67,14 @@ class HomeScreen extends StatelessWidget {
     if (context.watch<TodoProvider>().todoList.isNotEmpty) {
       return const ListTodoView();
     } else {
-      return Text(
-        "No Data Available",
-        style: Theme.of(context)
-            .textTheme
-            .bodyText1
-            ?.copyWith(color: Colors.black),
+      return Center(
+        child: Text(
+          "No ToDos Created",
+          style: Theme.of(context)
+              .textTheme
+              .bodyText1
+              ?.copyWith(color: Colors.black),
+        ),
       );
     }
     // if (context.watch<TodoProvider>().isListView) {
