@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:todo/database/models/todo_model.dart';
 import 'package:todo/providers/todo_provider.dart';
 import 'package:todo/ui/widgets/add_todo_popup.dart';
+import 'package:todo/ui/widgets/todo_grid_item.dart';
 import 'package:todo/ui/widgets/todo_list_item.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -16,10 +17,12 @@ class HomeScreen extends StatelessWidget {
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: AppBar(
+            backgroundColor: Colors.black,
             title: Text(
               "Yocket ToDo",
-              style: Theme.of(context).textTheme.headline6,
+              style: Theme.of(context).textTheme.headline5?.copyWith(color: Colors.white),
             ),
+            automaticallyImplyLeading: false,
             actions: [
               InkWell(
                 onTap: () => Provider.of<TodoProvider>(context, listen: false)
@@ -27,7 +30,8 @@ class HomeScreen extends StatelessWidget {
                 child: Icon(context.watch<TodoProvider>().isListView
                     ? Icons.list
                     : Icons.grid_3x3),
-              )
+              ),
+              const SizedBox(width: 16,)
             ],
           ),
         ),
@@ -64,24 +68,23 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget getHomeBody(BuildContext context) {
-    if (context.watch<TodoProvider>().todoList.isNotEmpty) {
-      return const ListTodoView();
-    } else {
-      return Center(
+    if (context.watch<TodoProvider>().todoList.isEmpty) {
+     return Center(
         child: Text(
           "No ToDos Created",
           style: Theme.of(context)
               .textTheme
-              .bodyText1
+              .headline6
               ?.copyWith(color: Colors.black),
         ),
       );
     }
-    // if (context.watch<TodoProvider>().isListView) {
-    //   return const ListTodoView();
-    // } else {
-    //   return const GridTodoView();
-    // }
+
+    if (context.watch<TodoProvider>().isListView) {
+      return const ListTodoView();
+    } else {
+      return const GridTodoView();
+    }
   }
 }
 
@@ -113,6 +116,20 @@ class GridTodoView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Consumer<TodoProvider>(builder: (context, todoProvider, child) {
+      return GridView.builder(
+        
+        padding: const EdgeInsets.all(16),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 2,
+            mainAxisSpacing: 16,
+            crossAxisSpacing: 16,
+            childAspectRatio: 0.7
+          ),
+          itemCount: todoProvider.todoList.length,
+          itemBuilder: (BuildContext context, int index) {
+            return TodoGridItem(todoProvider.todoList[index]);
+          });
+    });
   }
 }

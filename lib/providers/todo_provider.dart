@@ -30,6 +30,7 @@ class TodoProvider extends ChangeNotifier {
 
   void toggleView() {
     _isListView = !_isListView;
+    notifyListeners();
   }
 
   void toggleTodoPauseResume(String title) {
