@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/database/models/todo_model.dart';
 import 'package:todo/providers/todo_provider.dart';
+import 'package:todo/ui/widgets/add_todo_popup.dart';
 import 'package:todo/ui/widgets/todo_list_item.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -31,16 +32,33 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Provider.of<TodoProvider>(context, listen: false).addNewTodoItem(
-                TodoModel(title: "My Third Task", duration: 20));
-          },
-          child: const Icon(
-            Icons.add_task,
-            color: Colors.amber,
-          ),
-        ),
+        floatingActionButton: Builder(builder: (builderContext) {
+          return FloatingActionButton(
+            onPressed: () async {
+              // Provider.of<TodoProvider>(context, listen: false).addNewTodoItem(
+              //     TodoModel(title: "My Third Task", duration: 20));
+              TodoModel? model = await showDialog<TodoModel>(
+                  context: builderContext,
+                  useSafeArea: true,
+                  builder: (builderContext) {
+                    return const AlertDialog(
+                        insetPadding: EdgeInsets.all(0),
+                        titlePadding: EdgeInsets.all(0),
+                        buttonPadding: EdgeInsets.all(0),
+                        actionsPadding: EdgeInsets.all(0),
+                        contentPadding: EdgeInsets.all(0),
+                        content: AddTodoPopupWidget());
+                  });
+              if (model != null) {
+                debugPrint(model.title);
+              }
+            },
+            child: const Icon(
+              Icons.add_task,
+              color: Colors.amber,
+            ),
+          );
+        }),
         body: getHomeBody(context),
       ),
     );
@@ -74,11 +92,11 @@ class ListTodoView extends StatelessWidget {
     return Consumer<TodoProvider>(
       builder: (context, todoProvider, child) {
         return ListView.separated(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+            padding: const EdgeInsets.symmetric(vertical: 16),
             itemBuilder: (context, index) {
               return Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                child: TodoListItem(todoProvider.todoList[index]));
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  child: TodoListItem(todoProvider.todoList[index]));
             },
             separatorBuilder: (context, index) {
               return Container(height: 16);
