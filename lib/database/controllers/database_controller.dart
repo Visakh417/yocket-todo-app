@@ -26,4 +26,33 @@ class DbContoller {
 
     todoBox.put(todo.title, todo);
   }
+
+  void deleteTodoItem(String title) {
+    final Box<TodoModel> todoBox = DatabaseConstants().getChatDatabase();
+
+    todoBox.delete(title);
+  }
+
+  void toggleTaskPauseResume(String title) {
+    final Box<TodoModel> todoBox = DatabaseConstants().getChatDatabase();
+    TodoModel? todo = todoBox.get(title);
+
+    if (todo == null) return;
+    todo.isPaused = !todo.isPaused;
+    todoBox.put(title, todo);
+  }
+
+  void updateToDoPassedTime(String title, int passedtime) {
+    final Box<TodoModel> todoBox = DatabaseConstants().getChatDatabase();
+    TodoModel? todo = todoBox.get(title);
+
+    if (todo == null) return;
+    todo.passedTime = passedtime;
+
+    if (todo.passedTime >= todo.duration) {
+      todo.status = "Done";
+    }
+
+    todoBox.put(title, todo);
+  }
 }

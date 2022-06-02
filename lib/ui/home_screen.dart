@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/database/models/todo_model.dart';
 import 'package:todo/providers/todo_provider.dart';
+import 'package:todo/ui/widgets/todo_list_item.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -33,7 +34,7 @@ class HomeScreen extends StatelessWidget {
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             Provider.of<TodoProvider>(context, listen: false).addNewTodoItem(
-                TodoModel(title: "My second Task", duration: 1000));
+                TodoModel(title: "My Third Task", duration: 20));
           },
           child: const Icon(
             Icons.add_task,
@@ -73,16 +74,14 @@ class ListTodoView extends StatelessWidget {
     return Consumer<TodoProvider>(
       builder: (context, todoProvider, child) {
         return ListView.separated(
+          padding: const EdgeInsets.symmetric(vertical: 16),
             itemBuilder: (context, index) {
               return Container(
-                color: Colors.white54,
-                padding: const EdgeInsets.all(16),
-                margin: const EdgeInsets.all(16),
-                child: Text(todoProvider.todoList[index].title),
-              );
+                margin: const EdgeInsets.symmetric(horizontal: 16),
+                child: TodoListItem(todoProvider.todoList[index]));
             },
             separatorBuilder: (context, index) {
-              return Container(height: 8);
+              return Container(height: 16);
             },
             itemCount: todoProvider.todoList.length);
       },

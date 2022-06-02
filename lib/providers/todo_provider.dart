@@ -12,8 +12,8 @@ class TodoProvider extends ChangeNotifier {
   List<TodoModel> _todoList = [];
 
   void init() {
-    _callDbListener();
     _todoList = _todoBox.values.toList();
+    _callDbListener();
   }
 
   void _callDbListener() {
@@ -24,10 +24,37 @@ class TodoProvider extends ChangeNotifier {
       _todoList = _todoBox.values.toList();
       notifyListeners();
     });
+
+    _runTodoAnalysisProcess();
   }
 
   void toggleView() {
     _isListView = !_isListView;
+  }
+
+  void toggleTodoPauseResume(String title) {
+    DbContoller().toggleTaskPauseResume(title);
+  }
+
+  void removeTodoTask(String title) {
+    DbContoller().deleteTodoItem(title);
+  }
+
+  Future<void>? updateProcessTime(String title, int passedtime) async {
+    DbContoller().updateToDoPassedTime(title, passedtime);
+  }
+
+  // ignore: prefer_final_fields
+  bool _canAnalysisRun = true;
+  Future<void> _runTodoAnalysisProcess() async {
+    do {
+      await Future.delayed(const Duration(seconds: 1));
+      for (TodoModel todoItem in todoList) {
+        if (!todoItem.isPaused && todoItem.status != 'Done') {
+          updateProcessTime(todoItem.title, todoItem.passedTime + 1);
+        }
+      }
+    } while (_canAnalysisRun);
   }
 
   void addNewTodoItem(TodoModel todoItem) {
