@@ -30,7 +30,8 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         title: 'Yocket ToDo',
         theme: ThemeData(
-          primarySwatch: Colors.purple,
+          primarySwatch: Colors.blue,
+          highlightColor: Colors.transparent,
           textTheme: const TextTheme(
             headline5: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
             headline6: TextStyle(fontSize: 16, fontWeight: FontWeight.w400),

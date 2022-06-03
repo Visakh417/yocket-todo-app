@@ -13,7 +13,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xff151515),
         appBar: PreferredSize(
           preferredSize: const Size.fromHeight(50),
           child: AppBar(
@@ -58,7 +58,7 @@ class HomeScreen extends StatelessWidget {
             },
             child: const Icon(
               Icons.add_task,
-              color: Colors.amber,
+              color: Colors.white,
             ),
           );
         }),

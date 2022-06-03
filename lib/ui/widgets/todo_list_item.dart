@@ -16,34 +16,50 @@ class TodoListItem extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
+          color: Colors.black,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(width: 1)),
+            ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(_getStatus(todoItem)),
+            Text(_getStatus(todoItem), style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                  color: Colors.blue
+                ),),
+            const SizedBox(height: 8,),
             Text(
               todoItem.title,
+              style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                color: Colors.white
+              ),
+              overflow: TextOverflow.ellipsis,
               maxLines: 2,
             ),
+            const SizedBox(height: 8,),
             if (todoItem.description != null &&
                 todoItem.description!.isNotEmpty)
               Text(
                 todoItem.description ?? "",
+                style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                  color: Colors.white54
+                ),
+                overflow: TextOverflow.ellipsis,
                 maxLines: 2,
               ),
+            const SizedBox(height: 8,),
             Row(
               children: [
                 Text(TimeUtil.getTimeRemaining(
-                    todoItem.duration, todoItem.passedTime)),
+                    todoItem.duration, todoItem.passedTime), style: Theme.of(context).textTheme.bodyText1?.copyWith(
+                  color: Colors.amber
+                )),
                 if (todoItem.status != "Done")
-                  Icon(todoItem.isPaused ? Icons.play_arrow : Icons.pause),
+                  Icon(todoItem.isPaused ? Icons.play_arrow : Icons.pause, color: Colors.white,),
                 const Spacer(),
                 InkWell(
                     onTap: () =>
                         Provider.of<TodoProvider>(context, listen: false)
                             .removeTodoTask(todoItem.title),
-                    child: const Icon(Icons.delete))
+                    child: const Icon(Icons.delete, color: Colors.red,))
               ],
             )
           ],
