@@ -68,6 +68,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget getHomeBody(BuildContext context) {
+    // Checking if the TodoList is empty or not
+    // If it is empty show a No Data Message
     if (context.watch<TodoProvider>().todoList.isEmpty) {
      return Center(
         child: Text(
@@ -80,6 +82,8 @@ class HomeScreen extends StatelessWidget {
       );
     }
 
+    // If TodoList is not empty
+    // Check what view user preferred (ListView or GridView)
     if (context.watch<TodoProvider>().isListView) {
       return const ListTodoView();
     } else {
